@@ -1,7 +1,10 @@
 <h1>Hello, Rails!</h1>
+<p> Our blog has <%= Article.public_article_count %> articles and counting! </p> 
 <ul>
   <% @articles.each do |article|%>
-    <li link_to article.title, article> <%= article.title%> </li>
+    <% unless article.archived? %>
+      <li link_to article.title, article> <%= article.title%> </li>
+    <% end %>
   <% end %>
  </ul>
 
