@@ -3,10 +3,12 @@
 class ArticlesController < ApplicationController
   def index
     @articles = Article.all
+    render json: @articles
   end
 
   def show
     @article = Article.find(params[:id])
+    render json: @article
   end
 
   def new
@@ -16,9 +18,15 @@ class ArticlesController < ApplicationController
   def create
     @article = Article.new(article_params)
     if @article.save
-      redirect_to @article
+      render json: @article
     else
-      render :new, status: :unprocessable_entity
+      render json: {
+        errors: [
+          {
+            message: 'Must be more than 10 characters'
+          }
+        ]
+      }
     end
   end
 
@@ -30,7 +38,7 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
 
     if @article.update(article_params)
-      redirect_to @article
+      render json: @article
     else
       render :new, status: :unprocessable_entity
     end
@@ -40,7 +48,7 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
     @article.destroy
 
-    redirect_to root_path, status: :see_other
+    head :no_content, status: :ok
   end
 
   private
