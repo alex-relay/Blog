@@ -18,7 +18,7 @@
 !/log/.keep
 !/tmp/.keep
 
-echo coverage >> .gitignore
+coverage/
 
 # Ignore pidfiles, but keep the directory.
 /tmp/pids/*
