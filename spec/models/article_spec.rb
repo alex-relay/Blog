@@ -43,6 +43,5 @@ describe Article do
   end
 
   it "should return the number of public articles" do
-    byebug
   end
 end

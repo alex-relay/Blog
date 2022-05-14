@@ -2,28 +2,28 @@
 
 class ArticlesController < ApplicationController
   def index
-    @articles = Article.all
-    render json: @articles
+    articles = Article.all
+    render json: articles
   end
 
   def show
-    @article = Article.find(params[:id])
-    render json: @article
+    article = Article.find(params[:id])
+    render json: article
   end
 
   def new
-    @article = Article.new
+    article = Article.new
   end
 
   def create
-    @article = Article.new(article_params)
-    if @article.save
-      render json: @article
+    article = Article.new(article_params)
+    if article.save
+      render json: article
     else
       render json: {
         errors: [
           {
-            message: 'Must be more than 10 characters'
+            message: article.errors.full_messages
           }
         ]
       }
