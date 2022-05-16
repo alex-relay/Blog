@@ -23,7 +23,6 @@ describe ArticlesController, type: :request do
   describe 'create article' do
     it 'should create an article with given params' do
       post articles_path, params: { article: { title: 'Testing Title', body: 'This is a test body', status: 'public' } }
-      formatted = JSON.parse(response.body)
       expect(response).to be_successful
     end
 
@@ -61,6 +60,20 @@ describe ArticlesController, type: :request do
     end
     it 'should remove an article' do
       expect(response).to have_http_status(204)
+    end
+  end
+
+  describe 'update article' do
+    it 'should update an article' do
+      put article_path(
+        id: articles.first.id, article: {
+          title: articles.first.title, body: 'This is an updated body', status: 'archived'
+        }
+      )
+      formatted = JSON.parse(response.body)
+      expect(response).to be_successful
+      expect(formatted['body']).to eq 'This is an updated body'
+      expect(formatted['status']).to eq 'archived'
     end
   end
 end
