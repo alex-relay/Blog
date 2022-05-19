@@ -23,25 +23,28 @@ describe ArticlesController, type: :request do
   describe 'create article' do
     it 'should create an article with given params' do
       post articles_path, params: { article: { title: 'Testing Title', body: 'This is a test body', status: 'public' } }
+      formatted = JSON.parse(response.body)
       expect(response).to be_successful
+      expect(formatted['params']['title']).to eq 'Testing Title'
+      expect(formatted['params']['body']).to eq 'This is a test body'
     end
 
     it 'should produce an error if body is nil' do
       post articles_path, params: { article: { title: 'Testing Title', body: nil, status: 'public' } }
       formatted = JSON.parse(response.body)
-      expect(formatted['errors'].first['message']).to include "Body can't be blank"
+      expect(formatted['errors'].first['message']['article']).to include "Body can't be blank"
     end
 
     it 'should produce an error if title is nil' do
       post articles_path, params: { article: { title: nil, body: 'This is a test body', status: 'public' } }
       formatted = JSON.parse(response.body)
-      expect(formatted['errors'].first['message'].first).to eq "Title can't be blank"
+      expect(formatted['errors'].first['message']['article'].first).to eq "Title can't be blank"
     end
 
     it 'should produce an error if body is less than 10 characters' do
       post articles_path, params: { article: { title: 'Testing Title', body: 'too short', status: 'public' } }
       formatted = JSON.parse(response.body)
-      expect(formatted['errors'].first['message'].first).to eq 'Body is too short (minimum is 10 characters)'
+      expect(formatted['errors'].first['message']['article'].first).to eq 'Body is too short (minimum is 10 characters)'
     end
 
     it 'should not allow for invalid field to be saved' do
@@ -72,8 +75,8 @@ describe ArticlesController, type: :request do
       )
       formatted = JSON.parse(response.body)
       expect(response).to be_successful
-      expect(formatted['body']).to eq 'This is an updated body'
-      expect(formatted['status']).to eq 'archived'
+      expect(formatted['article']['body']).to eq 'This is an updated body'
+      expect(formatted['article']['status']).to eq 'archived'
     end
   end
 end

@@ -16,14 +16,14 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    article = Article.new(article_params)
-    if article.save
+    article = CreationService.new(article_params)
+    if article.create
       render json: article
     else
       render json: {
         errors: [
           {
-            message: article.errors.full_messages
+            message: article.errors
           }
         ]
       }
@@ -35,12 +35,18 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    @article = Article.find(params[:id])
+    article = UpdatingService.new(article: Article.find(params[:id]))
 
-    if @article.update(article_params)
-      render json: @article
+    if article.update(article_params)
+      render json: article
     else
-      render :new, status: :unprocessable_entity
+      render json: {
+        errors: [
+          {
+            message: article.errors
+          }
+        ]
+      }
     end
   end
 
